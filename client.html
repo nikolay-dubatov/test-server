@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Веб-клиент управления</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Управление устройством</h1>
+        
+        <!-- Видеопоток -->
+        <div class="video-wrapper">
+            <img id="video-stream" src="http://192.168.0.83:5000/stream" alt="Видеопоток">
+        </div>
+        
+        <!-- Панель управления -->
+        <div class="control-panel">
+            <button onclick="sendCommand('forward')">Вперёд</button>
+            <button onclick="sendCommand('backward')">Назад</button>
+            <button onclick="sendCommand('left')">Влево</button>
+            <button onclick="sendCommand('right')">Вправо</button>
+            <button onclick="sendCommand('stop')">Стоп</button>
+        </div>
+        
+        <!-- Статус -->
+        <div id="status" class="status">Готов к работе</div>
+    </div>
+
+    <script>
+        // Функция отправки команды
+        function sendCommand(command) {
+            fetch(`http://192.168.0.83:5000/${command}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status').innerText = 
+                        `Команда: ${command} | Статус: ${data.message}`;
+                })
+                .catch(error => {
+                    document.getElementById('status').innerText = 
+                        `Ошибка: ${error.message}`;
+                });
+        }
+    </script>
+</body>
+</html>
